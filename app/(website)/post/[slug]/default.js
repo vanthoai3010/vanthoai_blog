@@ -29,96 +29,78 @@ export default function Post(props) {
   return (
     <>
       <Container className="!pt-0">
-        {/* post title and category */}
-        <div className="mx-auto mt-10 mb-5 max-w-screen-md px-4">
-          <h1 className="text-brand-primary mb-3 text-start text-3xl font-semibold tracking-tight dark:text-white lg:text-4xl lg:leading-snug">
+        {/* Tiêu đề bài viết */}
+        <div className="mx-auto mt-12 mb-6 max-w-screen-md px-4">
+          <h1 className="text-brand-primary text-start text-4xl font-bold tracking-tight leading-tight dark:text-white">
             {post.title}
           </h1>
         </div>
       </Container>
-      {/* main image */}
-      {/* <div className="relative z-0 mx-auto aspect-video max-w-screen-lg overflow-hidden lg:rounded-lg">
-        {imageProps && (
-          <Image
-            src={imageProps.src}
-            alt={post.mainImage?.alt || "Thumbnail"}
-            loading="eager"
-            fill
-            sizes="100vw"
-            className="object-cover"
-          />
-        )}
-      </div> */}
-      {/* author */}
-      <div className=" mx-auto max-w-screen-md flex px-4">
-        <div className="flex items-center gap-3">
-          <div className="relative h-10 w-10 flex-shrink-0">
+
+      {/* Tác giả và danh mục */}
+      <div className="mx-auto max-w-screen-md flex flex-col md:flex-row items-start justify-between gap-6 px-4">
+        <div className="flex items-center gap-4">
+          <div className="relative h-12 w-12 flex-shrink-0">
             {AuthorimageProps && (
               <Link href={`/author/${post.author.slug.current}`}>
                 <Image
                   src={AuthorimageProps.src}
                   alt={post?.author?.name}
-                  className="rounded-full object-cover"
+                  className="rounded-full object-cover border border-gray-300 dark:border-gray-700"
                   fill
-                  sizes="40px"
+                  sizes="48px"
                 />
               </Link>
             )}
           </div>
           <div>
-            <p className="text-black font-bold dark:text-white">
+            <p className="text-base font-semibold text-gray-800 dark:text-white">
               <Link href={`/author/${post.author.slug.current}`}>
                 {post.author.name}
               </Link>
             </p>
-            <div className="flex items-center space-x-2 text-sm">
-              <time
-                className="text-gray-500 dark:text-gray-400"
-                dateTime={post?.publishedAt || post._createdAt}>
-                {format(
-                  parseISO(post?.publishedAt || post._createdAt),
-                  "MMMM dd, yyyy"
-                )}
+            <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
+              <time dateTime={post?.publishedAt || post._createdAt}>
+                {format(parseISO(post?.publishedAt || post._createdAt), "MMMM dd, yyyy")}
               </time>
               <span>· {post.estReadingTime || "5"} min read</span>
             </div>
           </div>
         </div>
-        <div className="flex justify-center">
+
+        {/* Nhãn danh mục */}
+        <div className="mt-2 md:mt-0">
           <CategoryLabel categories={post.categories} />
         </div>
       </div>
 
+      {/* Nội dung bài viết */}
       <Container>
-        <article className="mx-auto max-w-screen-md ">
-          <div className="prose font-semibold mx-auto my-3 dark:prose-invert prose-a:text-blue-600">
+        <article className="mx-auto max-w-screen-md mt-10 px-4">
+          <div className="prose font-semibold prose-lg dark:prose-invert prose-a:text-blue-600 leading-relaxed">
             {post.body && <PortableText value={post.body} />}
           </div>
-          <div className="mb-7 mt-7 flex justify-center">
+
+          {/* Nút trở lại */}
+          <div className="my-10 flex justify-center">
             <Link
               href="/"
-              className="bg-brand-secondary/20 rounded-full px-5 py-2 text-sm text-blue-600 dark:text-blue-500 ">
+              className="bg-blue-100 hover:bg-blue-200 text-blue-700 dark:bg-blue-900/20 dark:hover:bg-blue-900/30 dark:text-blue-400 rounded-full px-6 py-2 text-sm transition">
               ← View all posts
             </Link>
           </div>
-          {post.author && <AuthorCard author={post.author} />}
+
+          {/* Tác giả dưới cùng */}
+          {post.author && (
+            <div className="mt-12">
+              <AuthorCard author={post.author} />
+            </div>
+          )}
         </article>
       </Container>
+
     </>
   );
 }
 
-const MainImage = ({ image }) => {
-  return (
-    <div className="mb-12 mt-12 ">
-      <Image {...urlForImage(image)} alt={image.alt || "Thumbnail"} />
-      <figcaption className="text-center ">
-        {image.caption && (
-          <span className="text-sm italic text-gray-600 dark:text-gray-400">
-            {image.caption}
-          </span>
-        )}
-      </figcaption>
-    </div>
-  );
-};
+

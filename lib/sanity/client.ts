@@ -77,17 +77,21 @@ export async function getAllPostsSlugs() {
 export async function getAllAuthorsSlugs() {
   if (client) {
     const slugs = (await client.fetch(authorsquery)) || [];
-    return slugs.map(slug => ({ author: slug }));
+    return slugs.map(({ slug }) => ({ slug }));
   }
   return [];
 }
 
+
 export async function getAuthorPostsBySlug(slug) {
-  if (client) {
-    return (await client.fetch(postsbyauthorquery, { slug })) || {};
-  }
-  return {};
+  if (!client) return {};
+
+  const posts = await client.fetch(postsbyauthorquery, { slug });
+  const author = posts.length > 0 ? posts[0].author : null;
+
+  return { author, posts };
 }
+
 
 export async function getAllAuthors() {
   if (client) {
